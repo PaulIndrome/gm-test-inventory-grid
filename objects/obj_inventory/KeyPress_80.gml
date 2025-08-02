@@ -1,0 +1,1 @@
+inventory.add_item(global.items.corner_short, -1, -1, irandom(3));
