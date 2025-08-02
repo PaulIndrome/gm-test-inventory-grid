@@ -37,5 +37,6 @@ function Item(_shape, _name) constructor {
 global.items = {
 	single : new Item(SHAPE.single, "single"),
 	duo : new Item(SHAPE.duo, "duo"), 
-	corner_short : new Item(SHAPE.corner_short, "corner short rel")
+	corner_short : new Item(SHAPE.corner_short, "corner short rel"),
+	corner_lop : new Item(SHAPE.corner_lop, "corner lop"),
 }
