@@ -8,21 +8,14 @@ if(mouse_dragging && (active_slot_x != mouse_pressed_slot_x || active_slot_y != 
 	
 	// dragged item over a different item
 	if(is_instanceof(hovered_item, GridItem) && hovered_item != mouse_pressed_on_item){
-	    var _ignore_fit = [hovered_item, mouse_pressed_on_item];
-		
-		var _shape_active = hovered_item.get_shape();
-		
-		var _dest_fit = inventory.can_fit_position(_shape_dragged, active_slot_x, active_slot_y, _ignore_fit);
-		var _source_fit = inventory.can_fit_position(_shape_active, mouse_pressed_slot_x, mouse_pressed_slot_y, _ignore_fit);
-		
-		if(_dest_fit && _source_fit){
-		    inventory.swap_items(mouse_pressed_on_item, hovered_item, active_slot_x, active_slot_y);
-		}
-	} else { // dragged item to a different slot on itself
+		global.last_operation_result = inventory_try_swap_items(inventory, mouse_pressed_on_item, inventory, hovered_item, active_slot_x, active_slot_y);
+	} else { // dragged item to an empty slot or different slot on itself
 		var _dest_fit = inventory.can_fit_position(_shape_dragged, active_slot_x, active_slot_y, mouse_pressed_on_item);
 		
 		if(_dest_fit){
-		    inventory.move_item(mouse_pressed_on_item, active_slot_x, active_slot_y);
+		    global.last_operation_result = inventory.move_item(mouse_pressed_on_item, active_slot_x, active_slot_y);
+		} else {
+		    global.last_operation_result = ITEM_ERROR.DEST_FIT;
 		}
 	}
 }

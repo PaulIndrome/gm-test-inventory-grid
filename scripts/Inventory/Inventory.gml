@@ -14,25 +14,7 @@ function ds_grid_foreach(_id_grid, _func, _offset = 0, _length = infinity){
 	}
 }
 
-enum ITEM_ROTATIONS {
-	NORTH,
-	EAST,
-	SOUTH,
-	WEST,
-}
 
-enum ITEM_REASON {
-	DEFAULT, 
-	QUEST_ADD_REWARD,
-	QUEST_ADD_ITEM,
-	QUEST_REMOVE_ITEM,
-	DEATH_PENALTY,
-}
-
-enum ITEM_ERROR {
-	DEST_INVENTORY_FULL,
-	AMOUNT_INSUFFICIENT,
-}
 
 function GridItem(_item, _x, _y, _rot) constructor {
 	item = _item;
@@ -56,8 +38,16 @@ function GridItem(_item, _x, _y, _rot) constructor {
 	    return item.get_shape(rotation);
 	}
 	
+	static get_space_num = function(){
+	    return item.get_space_num();
+	}
+	
 	///@func get_occupied_slots
-	static get_occupied_slots = function(_x, _y, _rot){
+	static get_occupied_slots = function(_x = -1, _y = -1, _rot = -1){
+		_x = _x < 0 ? slot_x : _x;
+		_y = _y < 0 ? slot_y : _y;
+		_rot = _rot < 0 ? rotation : _rot;
+		
 	    var _occupation = item.get_shape(_rot);
 		
 		var _i = 0;
@@ -79,7 +69,6 @@ function InventoryGrid(_columns = 16, _rows = 16, _slot_width = 16, _slot_height
 	slot_height = _slot_height;
 	
 	grid = ds_grid_create(columns, rows);
-	occupied = array_create_ext(columns, function(_i) { return array_create(rows, 0); });
 	grid_items = array_create(0);
 	
 	///@func add_item
@@ -100,11 +89,17 @@ function InventoryGrid(_columns = 16, _rows = 16, _slot_width = 16, _slot_height
 		
 		var _grid_item = new GridItem(_item, _x, _y, _rot);
 		
-		__write_to_occupied_slots(_grid_item);
+		place_item(_grid_item);
 	}
 	
-	///@func __write_to_occupied_slots
-	static __write_to_occupied_slots = function(_grid_item, _value = _grid_item){
+	static place_item = function(_grid_item){
+	    if(is_instanceof(_grid_item, GridItem) == false) exit;
+		
+		write_to_occupied_slots(_grid_item);
+	}
+	
+	///@func write_to_occupied_slots
+	static write_to_occupied_slots = function(_grid_item, _value = _grid_item){
 		if(is_instanceof(_grid_item, GridItem) == false) exit;
 		
 	    var _o = 0;
@@ -127,8 +122,7 @@ function InventoryGrid(_columns = 16, _rows = 16, _slot_width = 16, _slot_height
 	
 	///@func get_is_slot_occupied
 	static get_is_slot_occupied = function(_c, _r) {
-		return occupied[_c][_r];
-	    //return is_slot_valid(_c, _r) ? is_instanceof(get_item(_c, _r), GridItem) : true;
+	    return is_slot_valid(_c, _r) ? is_instanceof(get_item(_c, _r), GridItem) : true;
 	}
 	
 	///@func get_first_fitting_spot
@@ -192,25 +186,88 @@ function InventoryGrid(_columns = 16, _rows = 16, _slot_width = 16, _slot_height
 		    _rot = _grid_item.rotation;
 		}
 		
-		__write_to_occupied_slots(_grid_item, 0);
+		remove_item(_grid_item);
 		
 		_grid_item.update_occupied_slots(_target_x, _target_y, _rot);
 		
-		__write_to_occupied_slots(_grid_item);
+		place_item(_grid_item);
+		
+		return ITEM_ERROR.NONE;
 	}
 	
-	static swap_items = function(_grid_item_a, _grid_item_b, _target_x, _target_y){
-		var _a_x = _grid_item_a.slot_x;
-		var _a_y = _grid_item_a.slot_y;
+	///@func replace_item
+	static replace_item = function(_replace, _with, _target_x = _replace.slot_x, _target_y = _replace.slot_y){
+		if(is_instanceof(_replace, GridItem) == false) exit;
+		if(is_instanceof(_with, GridItem) == false) exit;
 		
-		__write_to_occupied_slots(_grid_item_a, 0);
+		remove_item(_replace);
 		
-		__write_to_occupied_slots(_grid_item_b, 0);
+		_with.update_occupied_slots(_target_x, _target_y);
 		
-		_grid_item_a.update_occupied_slots(_target_x, _target_y);
-		__write_to_occupied_slots(_grid_item_a);
-		
-		_grid_item_b.update_occupied_slots(_a_x, _a_y);
-		__write_to_occupied_slots(_grid_item_b);
+		place_item(_with);
 	}
+	
+	///@func remove_item
+	static remove_item = function(_grid_item){
+	    if(is_instanceof(_grid_item, GridItem) == false) exit;
+		
+		write_to_occupied_slots(_grid_item, 0);
+	}
+}
+
+///@func inventory_try_swap_items
+function inventory_try_swap_items(_src, _src_item, _dest, _dest_item, _target_x = _dest_item.slot_x, _target_y = _dest_item.slot_y){
+	var _ignore = [_src_item, _dest_item];
+	
+	var _src_item_shape = _src_item.get_shape();
+	var _dest_item_shape = _dest_item.get_shape();
+	
+	var _dest_fit = _dest.can_fit_position(_src_item_shape, _target_x, _target_y, _ignore);
+	var _src_fit = _src.can_fit_position(_dest_item_shape, _src_item.slot_x, _src_item.slot_y, _ignore);
+	
+	if(_dest_fit&& _src_fit){
+		if(_src == _dest && inventory_check_internal_swap(_src_item, _dest_item, _target_x, _target_y) != ITEM_ERROR.NONE) return ITEM_ERROR.SWAP_CONFLICT;
+		
+		_src.remove_item(_src_item);
+		_dest.remove_item(_dest_item);
+		
+		_dest_item.update_occupied_slots(_src_item.slot_x, _src_item.slot_y);
+		_src_item.update_occupied_slots(_target_x, _target_y);
+		
+	    _src.place_item(_dest_item);
+		_dest.place_item(_src_item);
+		return ITEM_ERROR.NONE;
+	}
+
+	if(_dest_fit == _src_fit){
+	    return ITEM_ERROR.SWAP_BOTH_FIT;
+	}
+	
+	return _dest_fit ? ITEM_ERROR.SWAP_SRC_FIT : ITEM_ERROR.SWAP_DEST_FIT;
+}
+
+///@func inventory_check_internal_swap
+///@desc checks if the new positions of the swapped items would collide when in the same inventory
+function inventory_check_internal_swap(_grid_item_a, _grid_item_b, _target_x, _target_y){
+    if(is_instanceof(_grid_item_a, GridItem) == false) exit;
+	if(is_instanceof(_grid_item_b, GridItem) == false) exit;
+	
+	var _new_occupied_a = _grid_item_a.get_occupied_slots(_target_x, _target_y);
+	var _new_occupied_b = _grid_item_b.get_occupied_slots(_grid_item_a.slot_x, _grid_item_a.slot_y);
+			
+	var _space_a = _grid_item_a.get_space_num();
+	var _space_b = _grid_item_b.get_space_num();
+			
+	var _a_outer = _space_a >= _space_b;
+	var _outer = _a_outer ? _new_occupied_a : _new_occupied_b;
+	var _inner = _a_outer ? _new_occupied_b : _new_occupied_a;
+			
+	var _i = 0;
+	if(array_any(_outer, method({ inner : _inner }, function(_o){
+		return array_any(inner, method({o : _o}, function(_i){
+			return o[0] == _i[0] && o[1] == _i[1];
+		}));
+	}))) return ITEM_ERROR.SWAP_CONFLICT;
+	
+	return ITEM_ERROR.NONE;
 }
