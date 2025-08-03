@@ -65,7 +65,11 @@ function InventoryGrid(_columns = 16, _rows = 16, _slot_width = 16, _slot_height
 	
 	static get_width = function() { return columns * slot_width; }
 	static get_height = function() { return rows * slot_height; }
-	static is_slot_valid = function(_c, _r) { return _c > -1 && _r > -1 && _c < columns && _r < rows; }
+	
+	static is_slot_valid = function(_c, _r) { 
+		var _value = _c > -1 && _r > -1 && _c < columns && _r < rows;
+		return _value; 
+	}
 	
 	///@func get_item
 	static get_item = function(_c, _r) {
@@ -74,7 +78,7 @@ function InventoryGrid(_columns = 16, _rows = 16, _slot_width = 16, _slot_height
 	
 	///@func get_is_slot_occupied
 	static get_is_slot_occupied = function(_c, _r) {
-	    return is_slot_valid(_c, _r) ? is_instanceof(get_item(_c, _r), GridItem) : true;
+	    return is_instanceof(get_item(_c, _r), GridItem);
 	}
 	
 	///@func get_first_fitting_spot
@@ -145,6 +149,7 @@ function InventoryGrid(_columns = 16, _rows = 16, _slot_width = 16, _slot_height
 			if(is_instanceof(_item, GridItem) && array_contains(_ignore_items, _item) == false){
 				return false;
 			}
+			
 			_i++;
 		}
 		
