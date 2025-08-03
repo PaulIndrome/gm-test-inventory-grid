@@ -40,6 +40,7 @@
     {"id":{"name":"Enums","path":"scripts/Enums/Enums.yy",},},
     {"id":{"name":"GridItem","path":"scripts/GridItem/GridItem.yy",},},
     {"id":{"name":"Inventory","path":"scripts/Inventory/Inventory.yy",},},
+    {"id":{"name":"InventoryFunctions","path":"scripts/InventoryFunctions/InventoryFunctions.yy",},},
     {"id":{"name":"Item","path":"scripts/Item/Item.yy",},},
     {"id":{"name":"Utils","path":"scripts/Utils/Utils.yy",},},
     {"id":{"name":"Sprite1","path":"sprites/Sprite1/Sprite1.yy",},},

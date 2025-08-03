@@ -191,72 +191,36 @@ function InventoryGrid(_columns = 16, _rows = 16, _slot_width = 16, _slot_height
 		
 		write_to_occupied_slots(_grid_item, 0);
 	}
-}
-
-///@func inventory_try_swap_items
-///@param {Struct.InventoryGrid} _src
-///@param {Struct.GridItem} _src_item
-///@param {Struct.InventoryGrid} _dest
-///@param {Struct.GridItem} _dest_item
-///@param {real} _target_x
-///@param {real} _target_y
-///@param {real} _src_rot
-function inventory_try_swap_items(_src, _src_item, _dest, _dest_item, _target_x = _dest_item.slot_x, _target_y = _dest_item.slot_y, _src_rot = -1){
-	var _ignore = [_src_item, _dest_item];
 	
-	_src_rot = _src_rot < 0 ? _src_item.rotation : _src_rot;
+	///@func check_internal_swap
+	///@desc checks if the new positions of the swapped items would collide when in the same inventory
+	///@param {Struct.GridItem} _grid_item_a
+	///@param {Struct.GridItem} _grid_item_b
+	///@param {real} _target_x
+	///@param {real} _target_y
+	///@param {real} _grid_item_a_rot ITEM_ROTATIONS
+	static check_internal_swap = function(_grid_item_a, _grid_item_b, _target_x, _target_y, _grid_item_a_rot = -1){
+	    if(is_instanceof(_grid_item_a, GridItem) == false) exit;
+		if(is_instanceof(_grid_item_b, GridItem) == false) exit;
 	
-	var _src_item_shape = _src_item.get_shape(_src_rot);
-	var _dest_item_shape = _dest_item.get_shape();
+		_grid_item_a_rot = _grid_item_a_rot < 0 ? _grid_item_a.rotation : _grid_item_a_rot;
 	
-	var _dest_fit = _dest.can_fit_position(_src_item_shape, _target_x, _target_y, _ignore);
-	var _src_fit = _src.can_fit_position(_dest_item_shape, _src_item.slot_x, _src_item.slot_y, _ignore);
+		var _new_occupied_a = _grid_item_a.get_occupied_slots(_target_x, _target_y, _grid_item_a_rot);
+		var _new_occupied_b = _grid_item_b.get_occupied_slots(_grid_item_a.slot_x, _grid_item_a.slot_y);
+			
+		var _space_a = _grid_item_a.get_space_num();
+		var _space_b = _grid_item_b.get_space_num();
+			
+		var _a_outer = _space_a >= _space_b;
+		var _outer = _a_outer ? _new_occupied_a : _new_occupied_b;
+		var _inner = _a_outer ? _new_occupied_b : _new_occupied_a;
+			
+		if(array_any(_outer, method({ inner : _inner }, function(_o){
+			return array_any(inner, method({o : _o}, function(_i){
+				return o[0] == _i[0] && o[1] == _i[1];
+			}));
+		}))) return ITEM_ERROR.SWAP_CONFLICT;
 	
-	if(_dest_fit&& _src_fit){
-		if(_src == _dest && inventory_check_internal_swap(_src_item, _dest_item, _target_x, _target_y, _src_rot) != ITEM_ERROR.NONE) return ITEM_ERROR.SWAP_CONFLICT;
-		
-		_src.remove_item(_src_item);
-		_dest.remove_item(_dest_item);
-		
-		_dest_item.update_occupied_slots(_src_item.slot_x, _src_item.slot_y);
-		_src_item.update_occupied_slots(_target_x, _target_y, _src_rot);
-		
-	    _src.place_item(_dest_item);
-		_dest.place_item(_src_item);
 		return ITEM_ERROR.NONE;
 	}
-
-	if(_dest_fit == _src_fit){
-	    return ITEM_ERROR.SWAP_BOTH_FIT;
-	}
-	
-	return _dest_fit ? ITEM_ERROR.SWAP_SRC_FIT : ITEM_ERROR.SWAP_DEST_FIT;
 }
-
-///@func inventory_check_internal_swap
-///@desc checks if the new positions of the swapped items would collide when in the same inventory
-function inventory_check_internal_swap(_grid_item_a, _grid_item_b, _target_x, _target_y, _grid_item_a_rot = -1){
-    if(is_instanceof(_grid_item_a, GridItem) == false) exit;
-	if(is_instanceof(_grid_item_b, GridItem) == false) exit;
-	
-	_grid_item_a_rot = _grid_item_a_rot < 0 ? _grid_item_a.rotation : _grid_item_a_rot;
-	
-	var _new_occupied_a = _grid_item_a.get_occupied_slots(_target_x, _target_y, _grid_item_a_rot);
-	var _new_occupied_b = _grid_item_b.get_occupied_slots(_grid_item_a.slot_x, _grid_item_a.slot_y);
-			
-	var _space_a = _grid_item_a.get_space_num();
-	var _space_b = _grid_item_b.get_space_num();
-			
-	var _a_outer = _space_a >= _space_b;
-	var _outer = _a_outer ? _new_occupied_a : _new_occupied_b;
-	var _inner = _a_outer ? _new_occupied_b : _new_occupied_a;
-			
-	if(array_any(_outer, method({ inner : _inner }, function(_o){
-		return array_any(inner, method({o : _o}, function(_i){
-			return o[0] == _i[0] && o[1] == _i[1];
-		}));
-	}))) return ITEM_ERROR.SWAP_CONFLICT;
-	
-	return ITEM_ERROR.NONE;
-}
-
