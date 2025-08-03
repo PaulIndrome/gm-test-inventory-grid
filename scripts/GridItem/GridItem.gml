@@ -21,6 +21,10 @@ function GridItem(_item, _x, _y, _rot) constructor {
 	    occupied_slots = get_occupied_slots(slot_x, slot_y, rotation);
 	}
 	
+	static get_drag_offset = function(_x, _y){
+	    return [_x - slot_x, _y - slot_y];
+	}
+	
 	///@param {real} _rot
 	///@param {Array<real>} _offset
 	static get_shape = function(_rot = -1){

@@ -64,21 +64,23 @@ if(active_slot_valid && mouse_active){
 	draw_line(_start_x, _start_y, _end_x, _end_y);
 }
 
+// draw dragged item
 if(active_slot_valid && mouse_dragging && is_instanceof(mouse_pressed_item, GridItem)){
 	draw_set_color(c_blue);
-	
+	draw_set_alpha(0.5);
 	var _rot = mouse_pressed_item_rotation;
-    var _shape = mouse_pressed_item.item.get_shape(_rot);
+	var _shape = mouse_pressed_item.item.get_shape(_rot);
 	
 	var _i = 0;
 	repeat(array_length(_shape)){
 		var _coords = _shape[_i++];
 		
-		_x = mouse_pos_x + _coords[0] * inventory.slot_width;
-		_y = mouse_pos_y + _coords[1] * inventory.slot_height;
+		_x = mouse_pos_x - inventory.slot_width * 0.5 + (_coords[0] - mouse_pressed_item_offset[0]) * inventory.slot_width;
+		_y = mouse_pos_y - inventory.slot_height * 0.5 + (_coords[1] - mouse_pressed_item_offset[1]) * inventory.slot_height;
 		
 	    draw_roundrect_ext(_x, _y, _x + inventory.slot_width, _y + inventory.slot_height, 16, 16, false);
 	}
+	draw_set_alpha(1.0);
 }
 
 draw_set_color(c_white);

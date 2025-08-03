@@ -11,6 +11,7 @@ mouse_dragging_item = false;
 mouse_pressed_slot_x = -1;
 mouse_pressed_slot_y = -1;
 mouse_pressed_item = undefined;
+mouse_pressed_item_offset = [0, 0];
 mouse_pressed_item_rotation = ITEM_ROTATIONS.EAST;
 
 active_slot_valid = false;
@@ -62,4 +63,14 @@ get_active_slot_valid = function(_id_x, _id_y){
 ///@func get_was_clicked
 get_was_clicked = function(_mouse_x, _mouse_y){
     return _mouse_x > gui_pos_x && _mouse_y > gui_pos_y && _mouse_x < gui_pos_x + inventory.get_width() && _mouse_y < gui_pos_y + inventory.get_height();
+}
+
+///@func rotate_drag_offset
+rotate_drag_offset = function(_cw = true){
+    if(mouse_pressed_item_offset[0] == 0 && mouse_pressed_item_offset[1] == 0) exit;
+	
+	// rotating cw is [-y, x], ccw is [y, -x]
+	var _offset = _cw ? [ -mouse_pressed_item_offset[1], mouse_pressed_item_offset[0] ] : [ mouse_pressed_item_offset[1], -mouse_pressed_item_offset[0] ];
+	
+	mouse_pressed_item_offset = _offset;
 }
