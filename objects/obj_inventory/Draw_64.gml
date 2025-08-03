@@ -86,3 +86,5 @@ draw_set_color(c_white);
 _y = inventory.rows * inventory.slot_height + gui_pos_y;
 draw_text(0, _y, $"slot: {active_slot_x} | {active_slot_y}")
 
+_y += 16;
+draw_text(0, _y, $"last op error: {ITEM_ERROR_STRING(global.last_operation_result)}");
