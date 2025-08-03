@@ -81,15 +81,14 @@ function InventoryGrid(_columns = 16, _rows = 16, _slot_width = 16, _slot_height
 	///@param {real} _x
 	///@param {real} _y
 	///@param {Constant.ITEM_ROTATIONS} _rot
-	static add_item = function(_item, _x = -1, _y = -1, _rot = 0){
-	    var _shape = _item.get_shape(_rot);
-		
+	static add_item = function(_item, _x = -1, _y = -1, _rot = -1){
 		if(_x < 0 || _y < 0){
 		    var _first_fit = get_first_fitting_spot(_item, _rot);
 			if(_first_fit == false) return ITEM_ERROR.DEST_INVENTORY_FULL;
 			
 			_x = _first_fit[0];
 			_y = _first_fit[1];
+			_rot = _first_fit[2];
 		}
 		
 		var _grid_item = new GridItem(_item, _x, _y, _rot);
@@ -131,25 +130,46 @@ function InventoryGrid(_columns = 16, _rows = 16, _slot_width = 16, _slot_height
 	}
 	
 	///@func get_first_fitting_spot
-	static get_first_fitting_spot = function(_item, _rot){
+	static get_first_fitting_spot = function(_item, _rot = -1){
 		var _x = 0;
 		var _y = 0;
 		
-		var _shape = _item.get_shape(_rot);
-		
-		repeat(ds_grid_width(grid)){
-		    repeat(ds_grid_height(grid)){
-				var _fit = can_fit_position(_shape, _x, _y);
+		if(_rot > -1){
+		    var _shape = _item.get_shape(_rot);
+			repeat(ds_grid_width(grid)){
+			    repeat(ds_grid_height(grid)){
+					var _fit = can_fit_position(_shape, _x, _y);
 				
-				if(_fit){
-				    return [_x, _y, _rot];
-				}
+					if(_fit){
+					    return [_x, _y, _rot];
+					}
 			
-				_y++;
+					_y++;
+				}
+				_x++;
+				_y = 0;
 			}
-			_x++;
-			_y = 0;
+		} else {
+			repeat(ds_grid_width(grid)){
+			    repeat(ds_grid_height(grid)){
+					var _fit = false;
+					var _shape = [];
+					_rot = -1;
+					do {
+						_rot++;
+						_shape = _item.get_shape(_rot);
+						_fit = can_fit_position(_shape, _x, _y);
+					} until(_rot >= ITEM_ROTATIONS.LENGTH || _fit == true)
+					
+					if(_fit) return [_x, _y, _rot];
+					
+					_y++;
+				}
+				_x++;
+				_y = 0;
+			}
 		}
+		
 		
 		return false;
 	}
