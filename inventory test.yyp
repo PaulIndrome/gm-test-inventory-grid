@@ -38,6 +38,7 @@
     {"id":{"name":"obj_inventory","path":"objects/obj_inventory/obj_inventory.yy",},},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
     {"id":{"name":"Enums","path":"scripts/Enums/Enums.yy",},},
+    {"id":{"name":"GridItem","path":"scripts/GridItem/GridItem.yy",},},
     {"id":{"name":"Inventory","path":"scripts/Inventory/Inventory.yy",},},
     {"id":{"name":"Item","path":"scripts/Item/Item.yy",},},
     {"id":{"name":"Utils","path":"scripts/Utils/Utils.yy",},},
