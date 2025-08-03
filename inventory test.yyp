@@ -39,7 +39,7 @@
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
     {"id":{"name":"Enums","path":"scripts/Enums/Enums.yy",},},
     {"id":{"name":"Inventory","path":"scripts/Inventory/Inventory.yy",},},
-    {"id":{"name":"Items","path":"scripts/Items/Items.yy",},},
+    {"id":{"name":"Item","path":"scripts/Item/Item.yy",},},
     {"id":{"name":"Utils","path":"scripts/Utils/Utils.yy",},},
     {"id":{"name":"Sprite1","path":"sprites/Sprite1/Sprite1.yy",},},
   ],

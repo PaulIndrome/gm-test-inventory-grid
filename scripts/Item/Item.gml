@@ -12,22 +12,23 @@ function Item(_shape, _name) constructor {
 	
 	///@func get_shape
 	static get_shape = function(_rot){
-	    var _shape_rot = array_map(shape, method({rot : _rot}, function(_e){
+	    var _shape_rot = array_map(shape, method({rot : _rot }, function(_e){
 			var _coords = [ _e[0], _e[1] ];
 			switch(rot){
 			    case ITEM_ROTATIONS.SOUTH:
-					_coords = [ -_e[1], _e[0] ];
+					_coords = [ -_coords[1], _coords[0] ];
 					break;
 			    case ITEM_ROTATIONS.WEST:
-					_coords = [ -_e[0], -_e[1] ];
+					_coords = [ -_coords[0], -_coords[1] ];
 					break;
 			    case ITEM_ROTATIONS.NORTH:
-					_coords = [ _e[1], -_e[0]];
+					_coords = [ _coords[1], -_coords[0] ];
 					break;
 				case ITEM_ROTATIONS.EAST: // falls through
 				default:
 					break;
 			}
+			
 			return _coords;
 		}));
 		
