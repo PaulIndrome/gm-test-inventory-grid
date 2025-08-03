@@ -32,6 +32,10 @@ function Item(_shape, _name) constructor {
 		
 		return _shape_rot;
 	}
+	
+	static get_space_num = function(){
+	    return array_length(shape);
+	}
 }
 
 global.items = {
