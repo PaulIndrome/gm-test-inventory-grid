@@ -64,7 +64,7 @@ if(active_slot_valid && mouse_active){
 	draw_line(_start_x, _start_y, _end_x, _end_y);
 }
 
-if(active_slot_valid && mouse_dragging){
+if(active_slot_valid && mouse_dragging && is_instanceof(mouse_pressed_on_item, GridItem)){
 	draw_set_color(c_blue);
 	
 	var _rot = mouse_pressed_on_item.rotation;
