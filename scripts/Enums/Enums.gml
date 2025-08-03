@@ -3,6 +3,8 @@ enum ITEM_ROTATIONS {
 	EAST,
 	SOUTH,
 	WEST,
+	
+	LENGTH,
 }
 
 enum ITEM_REASON {

@@ -14,8 +14,11 @@ function ds_grid_foreach(_id_grid, _func, _offset = 0, _length = infinity){
 	}
 }
 
-
-
+///@func GridItem
+///@param {Struct.Item} _item
+///@param {real} _x
+///@param {real} _y
+///@param {real} _rot
 function GridItem(_item, _x, _y, _rot) constructor {
 	item = _item;
 	
@@ -34,8 +37,10 @@ function GridItem(_item, _x, _y, _rot) constructor {
 	    occupied_slots = get_occupied_slots(slot_x, slot_y, rotation);
 	}
 	
-	static get_shape = function(){
-	    return item.get_shape(rotation);
+	static get_shape = function(_rot = -1){
+		_rot = _rot < 0 ? rotation : _rot;
+		
+	    return item.get_shape(_rot);
 	}
 	
 	static get_space_num = function(){
@@ -216,23 +221,32 @@ function InventoryGrid(_columns = 16, _rows = 16, _slot_width = 16, _slot_height
 }
 
 ///@func inventory_try_swap_items
-function inventory_try_swap_items(_src, _src_item, _dest, _dest_item, _target_x = _dest_item.slot_x, _target_y = _dest_item.slot_y){
+///@param {Struct.InventoryGrid} _src
+///@param {Struct.GridItem} _src_item
+///@param {Struct.InventoryGrid} _dest
+///@param {Struct.GridItem} _dest_item
+///@param {real} _target_x
+///@param {real} _target_y
+///@param {real} _src_rot
+function inventory_try_swap_items(_src, _src_item, _dest, _dest_item, _target_x = _dest_item.slot_x, _target_y = _dest_item.slot_y, _src_rot = -1){
 	var _ignore = [_src_item, _dest_item];
 	
-	var _src_item_shape = _src_item.get_shape();
+	_src_rot = _src_rot < 0 ? _src_item.rotation : _src_rot;
+	
+	var _src_item_shape = _src_item.get_shape(_src_rot);
 	var _dest_item_shape = _dest_item.get_shape();
 	
 	var _dest_fit = _dest.can_fit_position(_src_item_shape, _target_x, _target_y, _ignore);
 	var _src_fit = _src.can_fit_position(_dest_item_shape, _src_item.slot_x, _src_item.slot_y, _ignore);
 	
 	if(_dest_fit&& _src_fit){
-		if(_src == _dest && inventory_check_internal_swap(_src_item, _dest_item, _target_x, _target_y) != ITEM_ERROR.NONE) return ITEM_ERROR.SWAP_CONFLICT;
+		if(_src == _dest && inventory_check_internal_swap(_src_item, _dest_item, _target_x, _target_y, _src_rot) != ITEM_ERROR.NONE) return ITEM_ERROR.SWAP_CONFLICT;
 		
 		_src.remove_item(_src_item);
 		_dest.remove_item(_dest_item);
 		
 		_dest_item.update_occupied_slots(_src_item.slot_x, _src_item.slot_y);
-		_src_item.update_occupied_slots(_target_x, _target_y);
+		_src_item.update_occupied_slots(_target_x, _target_y, _src_rot);
 		
 	    _src.place_item(_dest_item);
 		_dest.place_item(_src_item);
@@ -248,11 +262,13 @@ function inventory_try_swap_items(_src, _src_item, _dest, _dest_item, _target_x 
 
 ///@func inventory_check_internal_swap
 ///@desc checks if the new positions of the swapped items would collide when in the same inventory
-function inventory_check_internal_swap(_grid_item_a, _grid_item_b, _target_x, _target_y){
+function inventory_check_internal_swap(_grid_item_a, _grid_item_b, _target_x, _target_y, _grid_item_a_rot = -1){
     if(is_instanceof(_grid_item_a, GridItem) == false) exit;
 	if(is_instanceof(_grid_item_b, GridItem) == false) exit;
 	
-	var _new_occupied_a = _grid_item_a.get_occupied_slots(_target_x, _target_y);
+	_grid_item_a_rot = _grid_item_a_rot < 0 ? _grid_item_a.rotation : _grid_item_a_rot;
+	
+	var _new_occupied_a = _grid_item_a.get_occupied_slots(_target_x, _target_y, _grid_item_a_rot);
 	var _new_occupied_b = _grid_item_b.get_occupied_slots(_grid_item_a.slot_x, _grid_item_a.slot_y);
 			
 	var _space_a = _grid_item_a.get_space_num();
@@ -270,3 +286,4 @@ function inventory_check_internal_swap(_grid_item_a, _grid_item_b, _target_x, _t
 	
 	return ITEM_ERROR.NONE;
 }
+

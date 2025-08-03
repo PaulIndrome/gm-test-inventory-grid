@@ -64,11 +64,11 @@ if(active_slot_valid && mouse_active){
 	draw_line(_start_x, _start_y, _end_x, _end_y);
 }
 
-if(active_slot_valid && mouse_dragging && is_instanceof(mouse_pressed_on_item, GridItem)){
+if(active_slot_valid && mouse_dragging && is_instanceof(mouse_pressed_item, GridItem)){
 	draw_set_color(c_blue);
 	
-	var _rot = mouse_pressed_on_item.rotation;
-    var _shape = mouse_pressed_on_item.item.get_shape(_rot);
+	var _rot = mouse_pressed_item_rotation;
+    var _shape = mouse_pressed_item.item.get_shape(_rot);
 	
 	var _i = 0;
 	repeat(array_length(_shape)){
@@ -86,5 +86,10 @@ draw_set_color(c_white);
 _y = inventory.rows * inventory.slot_height + gui_pos_y;
 draw_text(0, _y, $"slot: {active_slot_x} | {active_slot_y}")
 
-_y += 16;
-draw_text(0, _y, $"last op error: {ITEM_ERROR_STRING(global.last_operation_result)}");
+draw_text(0, _y + 16, $"last op error: {ITEM_ERROR_STRING(global.last_operation_result)}");
+
+draw_set_halign(fa_right);
+draw_text(display_get_gui_width(), _y, $"LMB drag: drag items");
+draw_text(display_get_gui_width(), _y + 16, $"RMB while dragging: rotate dragged item");
+
+draw_set_halign(fa_left);
