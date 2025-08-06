@@ -6,4 +6,4 @@ var _changed_rotation = _dragging_item && mouse_pressed_item_rotation != mouse_p
 
 mouse_dragging = _changed_slot || _changed_rotation;
 
-mouse_dragging_item = mouse_dragging && _dragging_item;
+mouse_is_dragging_item = mouse_dragging && _dragging_item;

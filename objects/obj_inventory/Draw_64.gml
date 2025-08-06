@@ -83,14 +83,16 @@ if(active_slot_valid && mouse_active){
 }
 
 // draw dragged item
-if(active_slot_valid && mouse_dragging && is_instanceof(mouse_pressed_item, GridItem)){
+if(mouse_dragging && is_instanceof(mouse_pressed_item, GridItem)){
+	draw_circle(gui_pos_x, gui_pos_y, 6, true);
+	
 	if(surface_exists(mouse_pressed_item_surf) == false){ // create dragging surface
 		mouse_pressed_item_surf = surface_create(window_get_width(), window_get_height());
 	
 		surface_set_target(mouse_pressed_item_surf);
 		draw_clear_alpha(c_black, 0.0);
 	
-		draw_set_color(c_blue);
+		draw_set_color(c_white);
 		var _shape_east = mouse_pressed_item.item.get_shape();
 		var _offset_east = rotate_offset([mouse_pressed_item_offset[0], mouse_pressed_item_offset[1]], - mouse_pressed_item_rotation);
 	
@@ -127,7 +129,7 @@ if(active_slot_valid && mouse_dragging && is_instanceof(mouse_pressed_item, Grid
 	var _rot_y = _tx * dsin(mouse_pressed_item_surf_rotation) + _ty * dcos(mouse_pressed_item_surf_rotation);
 	
 	// draw surface at mouse position
-	draw_surface_ext(mouse_pressed_item_surf, mouse_pos_x + _rot_x, mouse_pos_y + _rot_y, 1, 1, - mouse_pressed_item_surf_rotation, c_white, 0.5);
+	draw_surface_ext(mouse_pressed_item_surf, mouse_pos_x + _rot_x, mouse_pos_y + _rot_y, 1, 1, - mouse_pressed_item_surf_rotation, c_white, 0.1);
 	
 	#region unused immediate rotation using draw directly
 	//draw_set_color(c_blue);
@@ -149,6 +151,8 @@ if(active_slot_valid && mouse_dragging && is_instanceof(mouse_pressed_item, Grid
 }
 
 draw_set_color(c_white);
+
+if(active_slot_valid == false) exit;
 
 _y = inventory.rows * inventory.slot_height + gui_pos_y;
 draw_text(0, _y, $"slot: {active_slot_x} | {active_slot_y}")

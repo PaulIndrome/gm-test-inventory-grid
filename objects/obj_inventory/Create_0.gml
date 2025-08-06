@@ -6,7 +6,7 @@ mouse_pos_x = 0;
 mouse_pos_y = 0;
 mouse_active = false;
 mouse_dragging = false;
-mouse_dragging_item = false;
+mouse_is_dragging_item = false;
 
 mouse_pressed_x = 0;
 mouse_pressed_y = 0;
