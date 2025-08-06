@@ -1,6 +1,4 @@
 if(mouse_active == false) exit;
-//show_debug_message($"released");
-alarm[0] = -1;
 
 // dragged an item to another slot
 if(mouse_dragging_item){
@@ -27,6 +25,8 @@ if(mouse_dragging_item){
 	}
 }
 
+mouse_pressed_x = 0;
+mouse_pressed_y = 0;
 mouse_pressed_slot_x = -1;
 mouse_pressed_slot_y = -1;
 
@@ -37,3 +37,4 @@ mouse_pressed_item_rotation = 0;
 mouse_pressed_item_offset = [];
 
 mouse_pressed_item = undefined;
+surface_free(mouse_pressed_item_surf);

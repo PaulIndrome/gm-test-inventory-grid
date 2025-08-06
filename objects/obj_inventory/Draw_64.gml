@@ -66,21 +66,68 @@ if(active_slot_valid && mouse_active){
 
 // draw dragged item
 if(active_slot_valid && mouse_dragging && is_instanceof(mouse_pressed_item, GridItem)){
-	draw_set_color(c_blue);
-	draw_set_alpha(0.5);
-	var _rot = mouse_pressed_item_rotation;
-	var _shape = mouse_pressed_item.item.get_shape(_rot);
+	if(surface_exists(mouse_pressed_item_surf) == false){ // create dragging surface
+		mouse_pressed_item_surf = surface_create(window_get_width(), window_get_height());
 	
-	var _i = 0;
-	repeat(array_length(_shape)){
-		var _coords = _shape[_i++];
+		surface_set_target(mouse_pressed_item_surf);
+		draw_clear_alpha(c_black, 0.0);
+	
+		draw_set_color(c_blue);
+		var _shape_east = mouse_pressed_item.item.get_shape();
+		var _offset_east = rotate_offset([mouse_pressed_item_offset[0], mouse_pressed_item_offset[1]], - mouse_pressed_item_rotation);
+	
+		var _i = 0;
+		repeat(array_length(_shape_east)){
+			var _coords = _shape_east[_i++];
 		
-		_x = mouse_pos_x - inventory.slot_width * 0.5 + (_coords[0] - mouse_pressed_item_offset[0]) * inventory.slot_width;
-		_y = mouse_pos_y - inventory.slot_height * 0.5 + (_coords[1] - mouse_pressed_item_offset[1]) * inventory.slot_height;
+			_x = mouse_pressed_x - inventory.slot_width * 0.5 + (_coords[0] - _offset_east[0]) * inventory.slot_width;
+			_y = mouse_pressed_y - inventory.slot_height * 0.5 + (_coords[1] - _offset_east[1]) * inventory.slot_height;
 		
-	    draw_roundrect_ext(_x, _y, _x + inventory.slot_width, _y + inventory.slot_height, 16, 16, false);
+			draw_roundrect_ext(_x, _y, _x + inventory.slot_width, _y + inventory.slot_height, 16, 16, false);
+		}
+	
+		surface_reset_target();
+	
+		draw_set_color(c_white);
 	}
-	draw_set_alpha(1.0);
+	
+	var _rot = mouse_pressed_item_rotation * 90; // converting from EAST == 0 in cw rotation to degrees
+	
+	mouse_pressed_item_surf_rotation -= angle_difference(mouse_pressed_item_surf_rotation, _rot) * 0.2;
+	mouse_pressed_item_surf_rotation %= 360;
+	
+	// determine mouse position delta to initial position when the surface was drawn
+	var _mouse_dx = mouse_pos_x - mouse_pressed_x;
+	var _mouse_dy = mouse_pos_y - mouse_pressed_y;
+	
+	// offset to surface origin (0|0)
+	var _tx = - mouse_pos_x + _mouse_dx;
+	var _ty = - mouse_pos_y + _mouse_dy;
+	
+	// rotate surface origin around the offset
+	var _rot_x = _tx * dcos(mouse_pressed_item_surf_rotation) - _ty * dsin(mouse_pressed_item_surf_rotation);
+	var _rot_y = _tx * dsin(mouse_pressed_item_surf_rotation) + _ty * dcos(mouse_pressed_item_surf_rotation);
+	
+	// draw surface at mouse position
+	draw_surface_ext(mouse_pressed_item_surf, mouse_pos_x + _rot_x, mouse_pos_y + _rot_y, 1, 1, - mouse_pressed_item_surf_rotation, c_white, 0.5);
+	
+	#region unused immediate rotation using draw directly
+	//draw_set_color(c_blue);
+	//draw_set_alpha(0.5);
+	//var _rot = mouse_pressed_item_rotation;
+	//var _shape = mouse_pressed_item.item.get_shape(_rot);
+	
+	//var _i = 0;
+	//repeat(array_length(_shape)){
+	//	var _coords = _shape[_i++];
+		
+	//	_x = mouse_pos_x - inventory.slot_width * 0.5 + (_coords[0] - mouse_pressed_item_offset[0]) * inventory.slot_width;
+	//	_y = mouse_pos_y - inventory.slot_height * 0.5 + (_coords[1] - mouse_pressed_item_offset[1]) * inventory.slot_height;
+		
+	//    draw_roundrect_ext(_x, _y, _x + inventory.slot_width, _y + inventory.slot_height, 16, 16, false);
+	//}
+	//draw_set_alpha(1.0);
+	#endregion
 }
 
 draw_set_color(c_white);
