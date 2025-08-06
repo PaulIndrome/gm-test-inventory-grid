@@ -37,6 +37,13 @@ function InventoryGrid(_columns = 16, _rows = 16, _slot_width = 16, _slot_height
 			_x = _first_fit[0];
 			_y = _first_fit[1];
 			_rot = _first_fit[2];
+		} else {
+		    _x = clamp(_x, 0, columns - 1);
+		    _y = clamp(_y, 0, rows - 1);
+			
+			if(can_fit_position(_item.get_shape(_rot), _x, _y) == false){
+			    return ITEM_ERROR.DEST_FIT;
+			}
 		}
 		
 		var _grid_item = new GridItem(_item, _x, _y, _rot);
@@ -135,6 +142,7 @@ function InventoryGrid(_columns = 16, _rows = 16, _slot_width = 16, _slot_height
 	///@param {real} _x
 	///@param {real} _y
 	///@param {Array<Struct.GridItem>} _ignore_items
+	///@return {bool}
 	static can_fit_position = function(_shape, _x, _y, _ignore_items = []){
 		var _i = 0;
 		

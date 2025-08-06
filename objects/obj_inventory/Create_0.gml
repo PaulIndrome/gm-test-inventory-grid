@@ -29,7 +29,7 @@ hovered_item = undefined;
 inventory.add_item(global.items.corner_short, 0, 5, ITEM_ROTATIONS.EAST);
 inventory.add_item(global.items.duo, 4, 5, ITEM_ROTATIONS.SOUTH);
 inventory.add_item(global.items.single, 8, 5, ITEM_ROTATIONS.WEST);
-inventory.add_item(global.items.corner_lop, 12, 5, ITEM_ROTATIONS.NORTH);
+inventory.add_item(global.items.corner_lop);
 
 ///@func is_slot_highlighted
 is_slot_highlighted = function(_id_x, _id_y){
