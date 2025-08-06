@@ -11,7 +11,7 @@ function Item(_shape, _name) constructor {
 	name = _name;
 	
 	///@func get_shape
-	static get_shape = function(_rot){
+	static get_shape = function(_rot = ITEM_ROTATIONS.EAST){
 	    var _shape_rot = array_map(shape, method({rot : _rot }, function(_e){
 			var _coords = [ _e[0], _e[1] ];
 			switch(rot){
