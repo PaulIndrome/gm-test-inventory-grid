@@ -48,6 +48,10 @@ function InventoryGrid(_columns = 16, _rows = 16, _slot_width = 16, _slot_height
 	    if(is_instanceof(_grid_item, GridItem) == false) exit;
 		
 		write_to_occupied_slots(_grid_item);
+		
+		if(array_contains(grid_items, _grid_item)) exit;
+		
+		array_push(grid_items, _grid_item);
 	}
 	
 	///@func write_to_occupied_slots
@@ -164,11 +168,11 @@ function InventoryGrid(_columns = 16, _rows = 16, _slot_width = 16, _slot_height
 		    _rot = _grid_item.rotation;
 		}
 		
-		remove_item(_grid_item);
+		write_to_occupied_slots(_grid_item, 0);
 		
 		_grid_item.update_occupied_slots(_target_x, _target_y, _rot);
 		
-		place_item(_grid_item);
+		write_to_occupied_slots(_grid_item);
 		
 		return ITEM_ERROR.NONE;
 	}
@@ -190,6 +194,11 @@ function InventoryGrid(_columns = 16, _rows = 16, _slot_width = 16, _slot_height
 	    if(is_instanceof(_grid_item, GridItem) == false) exit;
 		
 		write_to_occupied_slots(_grid_item, 0);
+		
+		var _i = array_find_index(grid_items, method({ grid_item : _grid_item }, function(_e){ return _e == grid_item; }));
+		if(_i < 0) exit;
+		
+		array_delete(grid_items, _i, 1);
 	}
 	
 	///@func check_internal_swap
