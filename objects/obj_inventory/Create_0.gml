@@ -20,7 +20,6 @@ active_slot_y = -1;
 
 hovered_item = undefined;
 
-draw_highlight = false;
 
 inventory.add_item(global.items.corner_short, 0, 5, ITEM_ROTATIONS.EAST);
 inventory.add_item(global.items.duo, 4, 5, ITEM_ROTATIONS.SOUTH);
