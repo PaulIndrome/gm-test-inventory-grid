@@ -1,6 +1,6 @@
 randomise();
 
-inventory = new InventoryGrid(16, 8, 32, 32);
+inventory = new InventoryGrid(columns, rows, 32, 32);
 
 mouse_pos_x = 0;
 mouse_pos_y = 0;
