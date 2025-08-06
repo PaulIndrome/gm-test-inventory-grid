@@ -1,10 +1,30 @@
+// rotation enums go clockwise
 enum ITEM_ROTATIONS {
-	NORTH,
 	EAST,
 	SOUTH,
 	WEST,
+	NORTH,
 	
 	LENGTH,
+}
+
+#macro ITEM_ROTATION_STRING __get_item_rotation_string
+///@ignore
+function __get_item_rotation_string(_enum){
+    switch(_enum){
+	    case ITEM_ROTATIONS.NORTH:
+			return "NORTH";
+	    case ITEM_ROTATIONS.EAST:
+			return "EAST";
+	    case ITEM_ROTATIONS.SOUTH:
+			return "SOUTH";
+	    case ITEM_ROTATIONS.WEST:
+			return "WEST";
+	    case ITEM_ROTATIONS.LENGTH:
+			return "LENGTH";
+		default:
+			return "";
+	}
 }
 
 enum ITEM_REASON {
