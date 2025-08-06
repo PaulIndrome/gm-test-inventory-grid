@@ -194,22 +194,24 @@ function InventoryGrid(_columns = 16, _rows = 16, _slot_width = 16, _slot_height
 	
 	///@func check_internal_swap
 	///@desc checks if the new positions of the swapped items would collide when in the same inventory
-	///@param {Struct.GridItem} _grid_item_a
-	///@param {Struct.GridItem} _grid_item_b
-	///@param {real} _target_x
-	///@param {real} _target_y
-	///@param {real} _grid_item_a_rot ITEM_ROTATIONS
-	static check_internal_swap = function(_grid_item_a, _grid_item_b, _target_x, _target_y, _grid_item_a_rot = -1){
-	    if(is_instanceof(_grid_item_a, GridItem) == false) exit;
-		if(is_instanceof(_grid_item_b, GridItem) == false) exit;
+	///@param {Struct.GridItem} _src_item
+	///@param {real} _src_x
+	///@param {real} _src_y
+	///@param {Struct.GridItem} _dest_item
+	///@param {real} _dest_x
+	///@param {real} _dest_y
+	///@param {real} _src_item_rot ITEM_ROTATIONS
+	static check_internal_swap = function(_src_item, _src_x, _src_y, _dest_item, _dest_x, _dest_y, _src_item_rot = -1){
+	    if(is_instanceof(_src_item, GridItem) == false) exit;
+		if(is_instanceof(_dest_item, GridItem) == false) exit;
 	
-		_grid_item_a_rot = _grid_item_a_rot < 0 ? _grid_item_a.rotation : _grid_item_a_rot;
+		_src_item_rot = _src_item_rot < 0 ? _src_item.rotation : _src_item_rot;
 	
-		var _new_occupied_a = _grid_item_a.get_occupied_slots(_target_x, _target_y, _grid_item_a_rot);
-		var _new_occupied_b = _grid_item_b.get_occupied_slots(_grid_item_a.slot_x, _grid_item_a.slot_y);
+		var _new_occupied_a = _src_item.get_occupied_slots(_dest_x, _dest_y, _src_item_rot);
+		var _new_occupied_b = _dest_item.get_occupied_slots(_src_x, _src_y);
 			
-		var _space_a = _grid_item_a.get_space_num();
-		var _space_b = _grid_item_b.get_space_num();
+		var _space_a = _src_item.get_space_num();
+		var _space_b = _dest_item.get_space_num();
 			
 		var _a_outer = _space_a >= _space_b;
 		var _outer = _a_outer ? _new_occupied_a : _new_occupied_b;
@@ -217,6 +219,7 @@ function InventoryGrid(_columns = 16, _rows = 16, _slot_width = 16, _slot_height
 			
 		if(array_any(_outer, method({ inner : _inner }, function(_o){
 			return array_any(inner, method({o : _o}, function(_i){
+				show_debug_message($"{o[0]} == {_i[0]} && {o[1]} == {_i[1]}");
 				return o[0] == _i[0] && o[1] == _i[1];
 			}));
 		}))) return ITEM_ERROR.SWAP_CONFLICT;

@@ -20,7 +20,7 @@ function inventory_try_swap_items(_src, _src_item, _dest, _dest_item, _src_x = _
 	var _src_fit = _src.can_fit_position(_dest_item_shape, _src_x, _src_y, _ignore);
 	
 	if(_dest_fit&& _src_fit){
-		if(_src == _dest && _src.check_internal_swap(_src_item, _dest_item, _dest_x, _dest_y, _src_rot) != ITEM_ERROR.NONE) return ITEM_ERROR.SWAP_CONFLICT;
+		if(_src == _dest && _src.check_internal_swap(_src_item, _src_x, _src_y, _dest_item, _dest_x, _dest_y, _src_rot) != ITEM_ERROR.NONE) return ITEM_ERROR.SWAP_CONFLICT;
 		
 		_src.remove_item(_src_item);
 		_dest.remove_item(_dest_item);
