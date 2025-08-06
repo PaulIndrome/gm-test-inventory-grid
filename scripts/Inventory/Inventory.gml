@@ -228,7 +228,6 @@ function InventoryGrid(_columns = 16, _rows = 16, _slot_width = 16, _slot_height
 			
 		if(array_any(_outer, method({ inner : _inner }, function(_o){
 			return array_any(inner, method({o : _o}, function(_i){
-				show_debug_message($"{o[0]} == {_i[0]} && {o[1]} == {_i[1]}");
 				return o[0] == _i[0] && o[1] == _i[1];
 			}));
 		}))) return ITEM_ERROR.SWAP_CONFLICT;
