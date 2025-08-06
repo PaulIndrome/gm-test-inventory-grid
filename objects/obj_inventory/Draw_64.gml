@@ -12,10 +12,10 @@ if(active_slot_valid){
     draw_roundrect_ext(_active_x, _active_y, _active_x + inventory.slot_width, _active_y + inventory.slot_height, 16, 16, false);
 }
 
-//  draw hovered item background 
-// need the instanceof check because returning undefined sets a value to 0 and that is not undefined -.-
+// draw hovered item background 
+// need the instanceof check because returning undefined sets a value in the grid to 0 and that is not undefined -.-
 if(active_slot_valid && is_instanceof(hovered_item, GridItem)){
-    draw_set_color( make_color_rgb(125, 0, 0) );
+    draw_set_color( make_color_rgb(0, 25, 0) );
 	
 	var _occupied = hovered_item.occupied_slots;
 	var _o = 0;
@@ -38,7 +38,6 @@ var _id_y = 0;
 repeat(inventory.columns){
     repeat(inventory.rows){
 		var _col = is_slot_highlighted(_id_x, _id_y) ? c_gray : c_dkgray;
-		_col = inventory.get_is_slot_occupied(_id_x, _id_y) ? c_red : _col;
 		
 		draw_set_color(_col);
 	    draw_roundrect_ext(_x, _y, _x + inventory.slot_width, _y + inventory.slot_height, 16, 16, true);
@@ -51,6 +50,25 @@ repeat(inventory.columns){
 	_id_x++;
 	_id_y = 0;
 	_y = gui_pos_y;
+}
+
+//draw items on grid
+var _i = 0;
+repeat(array_length(inventory.grid_items)){
+	draw_set_color(c_lime);
+    var _edges = inventory.grid_items[_i++].unique_edges;
+	
+	var _e = 0;
+	repeat(array_length(_edges)){
+	    var _edge = _edges[_e++];
+		
+		var _ex1 = _edge.x0 * inventory.slot_width + gui_pos_x;
+		var _ex2 = _edge.x1 * inventory.slot_width + gui_pos_x + 1;
+		var _ey1 = _edge.y0 * inventory.slot_height + gui_pos_y;
+		var _ey2 = _edge.y1 * inventory.slot_height + gui_pos_y + 1;
+		
+		draw_line(_ex1, _ey1, _ex2 , _ey2);
+	}
 }
 
 draw_set_color(c_white);
