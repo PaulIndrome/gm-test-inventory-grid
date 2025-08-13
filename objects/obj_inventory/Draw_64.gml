@@ -56,8 +56,15 @@ repeat(inventory.columns){
 var _i = 0;
 repeat(array_length(inventory.grid_items)){
 	draw_set_color(c_lime);
-    var _edges = inventory.grid_items[_i++].unique_edges;
+	var _grid_item = inventory.grid_items[_i++];
+    var _edges = _grid_item.unique_edges;
 	
+	draw_set_alpha(0.2);
+	_x = slot_gui_x(_grid_item.occupied_slots[0][0]);
+	_y = slot_gui_y(_grid_item.occupied_slots[0][1]);
+	draw_roundrect_ext(_x, _y, _x + inventory.slot_width, _y + inventory.slot_height, 16, 16, false);
+	
+	draw_set_alpha(1);
 	var _e = 0;
 	repeat(array_length(_edges)){
 	    var _edge = _edges[_e++];
