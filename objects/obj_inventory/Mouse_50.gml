@@ -1,3 +1,5 @@
+// global LMB down
+
 if(mouse_active == false) exit;
 
 var _dragging_item =  is_instanceof(mouse_pressed_item, GridItem);

@@ -1,3 +1,5 @@
+// global MMB down
+
 if(global.inventory_panning != id) exit;
 
 if(mouse_active == false && mouse_on_inventory == false) exit;

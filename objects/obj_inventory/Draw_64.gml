@@ -1,3 +1,5 @@
+// draw gui event
+
 if(is_instanceof(inventory, InventoryGrid) == false) exit;
 
 if(surface_exists(inventory_grid_surface) == false){

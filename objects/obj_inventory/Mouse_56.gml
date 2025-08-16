@@ -1,3 +1,5 @@
+// global LMB released
+
 if(mouse_active == false) exit;
 
 // dragged an item to another slot

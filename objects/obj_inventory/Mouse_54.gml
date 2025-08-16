@@ -1,3 +1,5 @@
+// global RMB pressed
+
 if(mouse_active == false) exit;
 if(is_instanceof(mouse_pressed_item, GridItem) == false) exit;
 

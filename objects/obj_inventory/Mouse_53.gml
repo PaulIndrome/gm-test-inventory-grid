@@ -1,3 +1,5 @@
+// global LMB pressed
+
 mouse_active = mouse_on_inventory;
 
 if(mouse_active == false) exit;
