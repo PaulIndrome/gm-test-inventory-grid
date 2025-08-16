@@ -4,6 +4,7 @@ inventory = new InventoryGrid(columns, rows, 32, 32);
 
 mouse_pos_x = 0;
 mouse_pos_y = 0;
+mouse_on_inventory = false;
 mouse_active = false;
 mouse_dragging = false;
 mouse_is_dragging_item = false;
@@ -35,6 +36,8 @@ scroll_x_max = inventory.slot_width * inventory.columns - gui_width;
 scroll_y_max = inventory.slot_height * inventory.rows - gui_height;
 
 hovered_item = undefined;
+hovered_item_to_remove = undefined;
+hovered_item_to_remove_clear = time_source_create(time_source_game, 0.25, time_source_units_seconds, method(id, function(){ hovered_item_to_remove = undefined; }));
 
 inventory.add_item(global.items.corner_short, 0, 5, ITEM_ROTATIONS.EAST);
 inventory.add_item(global.items.duo, 4, 5, ITEM_ROTATIONS.SOUTH);
@@ -74,9 +77,13 @@ get_active_slot_valid = function(_id_x, _id_y){
     return _val;
 }
 
-///@func get_was_clicked
-get_was_clicked = function(_mouse_x, _mouse_y){
-    return _mouse_x > gui_pos_x && _mouse_y > gui_pos_y && _mouse_x < gui_pos_x + inventory.get_width() && _mouse_y < gui_pos_y + inventory.get_height();
+///@func get_mouse_on_inventory
+get_mouse_on_inventory = function(_mouse_x, _mouse_y){
+	if(global.inventory_panning != noone){
+		return global.inventory_panning == id;
+	}
+	
+    return _mouse_x > gui_pos_x && _mouse_y > gui_pos_y && _mouse_x < gui_pos_x + gui_width && _mouse_y < gui_pos_y + gui_height;
 }
 
 ///@func rotate_offset

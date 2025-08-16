@@ -1,4 +1,4 @@
-global.item_dragged = undefined;
+global.inventory_panning = noone;
 global.last_operation_result = undefined;
 
 function ds_grid_foreach(_id_grid, _func, _offset = 0, _length = infinity){

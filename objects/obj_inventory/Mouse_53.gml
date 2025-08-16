@@ -1,4 +1,4 @@
-mouse_active = get_was_clicked(mouse_pos_x, mouse_pos_y);
+mouse_active = mouse_on_inventory;
 
 if(mouse_active == false) exit;
 

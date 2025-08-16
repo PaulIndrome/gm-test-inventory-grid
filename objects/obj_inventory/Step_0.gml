@@ -3,6 +3,13 @@ if(is_instanceof(inventory, InventoryGrid) == false) exit;
 mouse_pos_x = window_views_mouse_get_x();
 mouse_pos_y = window_views_mouse_get_y();
 
+mouse_on_inventory = get_mouse_on_inventory(mouse_pos_x, mouse_pos_y);
+
+if(mouse_on_inventory == false){
+	active_slot_valid = false;
+	hovered_item = undefined;
+	exit;
+}
 
 mouse_wheel_scroll();
 

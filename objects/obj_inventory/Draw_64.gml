@@ -91,10 +91,16 @@ draw_surface_part(inventory_grid_surface, scroll_x, scroll_y, gui_width, gui_hei
 
 draw_set_color(c_white);
 
+// draw border
+draw_set_alpha(mouse_on_inventory ? 0.4 : 0.15);
+draw_rectangle(gui_pos_x, gui_pos_y, gui_pos_x + gui_width + 1, gui_pos_y + gui_height + 1, true);
+draw_set_alpha(1);
 
 // draw dragged item
 if(mouse_dragging && is_instanceof(mouse_pressed_item, GridItem)){
-	if(surface_exists(mouse_pressed_item_surf) == false){ // create dragging surface
+	// dragging surface is initialized once for every new dragging operation
+	// then it is rotated and moved based on input and mouse position
+	if(surface_exists(mouse_pressed_item_surf) == false){
 		mouse_pressed_item_surf = surface_create(window_get_width(), window_get_height());
 	
 		surface_set_target(mouse_pressed_item_surf);
