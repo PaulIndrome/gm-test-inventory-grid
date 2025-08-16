@@ -168,13 +168,14 @@ draw_set_color(c_white);
 
 if(active_slot_valid == false) exit;
 
-_y = inventory.rows * inventory.slot_height + gui_pos_y;
+_y = display_get_gui_height() - 48;
 draw_text(0, _y, $"slot: {active_slot_x} | {active_slot_y}")
 
 draw_text(0, _y + 16, $"last op error: {ITEM_ERROR_STRING(global.last_operation_result)}");
 
 draw_set_halign(fa_right);
-draw_text(display_get_gui_width(), _y, $"LMB drag: drag items");
-draw_text(display_get_gui_width(), _y + 16, $"RMB while dragging: rotate dragged item");
+draw_text(display_get_gui_width(), _y - 16, $"LMB drag: drag items");
+draw_text(display_get_gui_width(), _y, $"RMB while dragging: rotate dragged item");
+draw_text(display_get_gui_width(), _y + 16, $"MMB: click to delete item, drag to pan");
 
 draw_set_halign(fa_left);
