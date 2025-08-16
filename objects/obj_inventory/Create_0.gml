@@ -19,12 +19,22 @@ mouse_pressed_item_rotation = ITEM_ROTATIONS.EAST;
 mouse_pressed_item_surf = undefined;
 mouse_pressed_item_surf_rotation = 0;
 
+inventory_grid_surface = undefined;
+
 active_slot_valid = false;
 active_slot_x = -1;
 active_slot_y = -1;
 
-hovered_item = undefined;
+scroll_step_x = 16;
+scroll_step_y = 16;
+scroll_x = 0;
+scroll_y = 0;
+slots_per_width = gui_width / inventory.slot_width;
+slots_per_height = gui_height / inventory.slot_height;
+scroll_x_max = inventory.slot_width * inventory.columns - gui_width;
+scroll_y_max = inventory.slot_height * inventory.rows - gui_height;
 
+hovered_item = undefined;
 
 inventory.add_item(global.items.corner_short, 0, 5, ITEM_ROTATIONS.EAST);
 inventory.add_item(global.items.duo, 4, 5, ITEM_ROTATIONS.SOUTH);
@@ -40,7 +50,7 @@ is_slot_highlighted = function(_id_x, _id_y){
 
 ///@func slot_gui_x
 slot_gui_x = function(_id_x){
-    return _id_x * inventory.slot_width + gui_pos_x;
+    return _id_x * inventory.slot_width;
 }
 
 ///@func slot_gui_center_x
@@ -55,7 +65,7 @@ slot_gui_center_y = function(_id_y){
 
 ///@func slot_gui_y
 slot_gui_y = function(_id_y){
-    return _id_y * inventory.slot_height + gui_pos_y;
+    return _id_y * inventory.slot_height;
 }
 
 ///@func get_active_slot_valid
@@ -82,4 +92,23 @@ rotate_offset = function(_offset, _steps = 1){
 	}
 	
 	return _offset;
+}
+
+///@func mouse_wheel_scroll
+mouse_wheel_scroll = function(){
+	if(mouse_wheel_up()){
+		if(keyboard_check(vk_shift)){
+			scroll_x = clamp(scroll_x - scroll_step_x, 0, scroll_x_max);
+		} else {
+			scroll_y = clamp(scroll_y - scroll_step_y, 0, scroll_y_max);
+		}
+	}
+
+	if(mouse_wheel_down()){	
+		if(keyboard_check(vk_shift)){
+			scroll_x = clamp(scroll_x + scroll_step_x, 0, scroll_x_max);
+		} else {
+			scroll_y = clamp(scroll_y + scroll_step_y, 0, scroll_y_max);
+		}
+	}
 }

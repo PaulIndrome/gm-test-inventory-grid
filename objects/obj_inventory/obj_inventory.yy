@@ -38,6 +38,8 @@
     {"$GMObjectProperty":"v1","%Name":"gui_pos_y","filters":[],"listItems":[],"multiselect":false,"name":"gui_pos_y","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"16","varType":0,},
     {"$GMObjectProperty":"v1","%Name":"columns","filters":[],"listItems":[],"multiselect":false,"name":"columns","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"8","varType":0,},
     {"$GMObjectProperty":"v1","%Name":"rows","filters":[],"listItems":[],"multiselect":false,"name":"rows","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"8","varType":0,},
+    {"$GMObjectProperty":"v1","%Name":"gui_width","filters":[],"listItems":[],"multiselect":false,"name":"gui_width","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"150","varType":0,},
+    {"$GMObjectProperty":"v1","%Name":"gui_height","filters":[],"listItems":[],"multiselect":false,"name":"gui_height","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"200","varType":0,},
   ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",

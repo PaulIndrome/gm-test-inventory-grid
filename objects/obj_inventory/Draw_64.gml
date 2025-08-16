@@ -1,7 +1,14 @@
 if(is_instanceof(inventory, InventoryGrid) == false) exit;
 
-var _x = gui_pos_x;
-var _y = gui_pos_y;
+if(surface_exists(inventory_grid_surface) == false){
+	inventory_grid_surface = surface_create(inventory.get_width(), inventory.get_height());
+}
+
+var _x = 0;
+var _y = 0;
+
+surface_set_target(inventory_grid_surface);
+draw_clear_alpha(c_black, 0);
 
 // draw active slot background
 if(active_slot_valid){
@@ -49,7 +56,7 @@ repeat(inventory.columns){
 	_x += inventory.slot_width;
 	_id_x++;
 	_id_y = 0;
-	_y = gui_pos_y;
+	_y = 0;
 }
 
 //draw items on grid
@@ -69,30 +76,24 @@ repeat(array_length(inventory.grid_items)){
 	repeat(array_length(_edges)){
 	    var _edge = _edges[_e++];
 		
-		var _ex1 = _edge.x0 * inventory.slot_width + gui_pos_x;
-		var _ex2 = _edge.x1 * inventory.slot_width + gui_pos_x + 1;
-		var _ey1 = _edge.y0 * inventory.slot_height + gui_pos_y;
-		var _ey2 = _edge.y1 * inventory.slot_height + gui_pos_y + 1;
+		var _ex1 = _edge.x0 * inventory.slot_width;
+		var _ex2 = _edge.x1 * inventory.slot_width + 1;
+		var _ey1 = _edge.y0 * inventory.slot_height;
+		var _ey2 = _edge.y1 * inventory.slot_height + 1;
 		
 		draw_line(_ex1, _ey1, _ex2 , _ey2);
 	}
 }
 
+surface_reset_target();
+
+draw_surface_part(inventory_grid_surface, scroll_x, scroll_y, gui_width, gui_height, gui_pos_x, gui_pos_y);
+
 draw_set_color(c_white);
 
-// draw drag line
-if(active_slot_valid && mouse_active){
-    var _start_x = slot_gui_center_x(mouse_pressed_slot_x);
-	var _start_y = slot_gui_center_y(mouse_pressed_slot_y);
-	var _end_x = slot_gui_center_x(active_slot_x);
-	var _end_y = slot_gui_center_y(active_slot_y);
-	draw_line(_start_x, _start_y, _end_x, _end_y);
-}
 
 // draw dragged item
 if(mouse_dragging && is_instanceof(mouse_pressed_item, GridItem)){
-	draw_circle(gui_pos_x, gui_pos_y, 6, true);
-	
 	if(surface_exists(mouse_pressed_item_surf) == false){ // create dragging surface
 		mouse_pressed_item_surf = surface_create(window_get_width(), window_get_height());
 	
