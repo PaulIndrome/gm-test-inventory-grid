@@ -2,7 +2,7 @@ if(global.inventory_panning != id) exit;
 
 if(mouse_active == false) exit;
 
-if(mouse_dragging && hovered_item_to_remove == hovered_item){
+if(mouse_dragging == false && hovered_item_to_remove == hovered_item){
 	inventory.remove_item(hovered_item);
 }
 
