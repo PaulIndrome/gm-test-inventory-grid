@@ -37,6 +37,7 @@ enum ITEM_REASON {
 
 enum ITEM_ERROR {
 	NONE,
+	DROPPED_OUTSIDE,
 	DEST_INVENTORY_FULL,
 	DEST_OCCUPIED,
 	DEST_FIT,
@@ -53,6 +54,8 @@ function __get_item_error_string(_enum){
     switch(_enum){
 	    case ITEM_ERROR.NONE:
 			return "NONE";
+	    case ITEM_ERROR.DROPPED_OUTSIDE:
+			return "DROPPED_OUTSIDE";
 	    case ITEM_ERROR.DEST_INVENTORY_FULL:
 			return "DEST_INVENTORY_FULL";
 	    case ITEM_ERROR.DEST_OCCUPIED:

@@ -31,6 +31,7 @@ if(mouse_is_dragging_item){
 	}
 	
 	if(_any_inventory_has_mouse == false){
+		global.last_operation_result = ITEM_ERROR.DROPPED_OUTSIDE;
 		on_mouse_release();
 		exit;
 	}
