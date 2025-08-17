@@ -3,7 +3,9 @@
 if(is_instanceof(inventory, InventoryGrid) == false) exit;
 
 if(surface_exists(inventory_grid_surface) == false){
-	inventory_grid_surface = surface_create(inventory.get_width(), inventory.get_height());
+	var _width = inventory.get_width();
+	var _height = inventory.get_height();
+	inventory_grid_surface = surface_create(_width, _height);
 }
 
 var _x = 0;
@@ -89,13 +91,15 @@ repeat(array_length(inventory.grid_items)){
 
 surface_reset_target();
 
-draw_surface_part(inventory_grid_surface, scroll_x, scroll_y, gui_width, gui_height, gui_pos_x, gui_pos_y);
+var _part_width = min(gui_width, surface_get_width(inventory_grid_surface));
+var _part_height = min(gui_height, surface_get_height(inventory_grid_surface));
+draw_surface_part(inventory_grid_surface, scroll_x, scroll_y, _part_width, _part_height, gui_pos_x, gui_pos_y);
 
 draw_set_color(c_white);
 
 // draw border
 draw_set_alpha(mouse_on_inventory ? 0.4 : 0.15);
-draw_rectangle(gui_pos_x, gui_pos_y, gui_pos_x + gui_width + 1, gui_pos_y + gui_height + 1, true);
+draw_rectangle(gui_pos_x, gui_pos_y, gui_pos_x + _part_width + 1, gui_pos_y + _part_height + 1, true);
 draw_set_alpha(1);
 
 // draw dragged item
