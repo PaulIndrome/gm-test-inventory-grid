@@ -4,6 +4,8 @@ if(mouse_active == false) exit;
 
 // dragged an item to another slot
 if(mouse_is_dragging_item){
+	var _any_inventory_has_mouse = mouse_on_inventory;
+	
 	var _shape_dragged = mouse_pressed_item.get_shape(mouse_pressed_item_rotation);
 	
 	var _dest_inventory = inventory;
@@ -17,6 +19,8 @@ if(mouse_is_dragging_item){
 		if(id == other) continue;
 		
 	    if(active_slot_valid){
+			_any_inventory_has_mouse = _any_inventory_has_mouse || mouse_on_inventory;
+			
 		    _dest_inventory = inventory;
 			_dest_item = hovered_item;
 			_dest_target_x = active_slot_x;
@@ -24,6 +28,11 @@ if(mouse_is_dragging_item){
 			_dest_slot_x = active_slot_x - other.mouse_pressed_item_offset[0];
 			_dest_slot_y = active_slot_y - other.mouse_pressed_item_offset[1];
 		}
+	}
+	
+	if(_any_inventory_has_mouse == false){
+		on_mouse_release();
+		exit;
 	}
 	
 	// dragged item over a different item
@@ -51,16 +60,4 @@ if(mouse_is_dragging_item){
 	}
 }
 
-mouse_pressed_x = 0;
-mouse_pressed_y = 0;
-mouse_pressed_slot_x = -1;
-mouse_pressed_slot_y = -1;
-
-mouse_active = false;
-mouse_dragging = false;
-mouse_is_dragging_item = false;
-mouse_pressed_item_rotation = 0;
-mouse_pressed_item_offset = [];
-
-mouse_pressed_item = undefined;
-surface_free(mouse_pressed_item_surf);
+on_mouse_release();

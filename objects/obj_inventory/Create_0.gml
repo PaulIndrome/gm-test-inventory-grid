@@ -119,3 +119,22 @@ mouse_wheel_scroll = function(){
 		}
 	}
 }
+
+///@func on_mouse_release
+on_mouse_release = function(){
+	mouse_pressed_x = 0;
+	mouse_pressed_y = 0;
+	mouse_pressed_slot_x = -1;
+	mouse_pressed_slot_y = -1;
+
+	mouse_active = false;
+	mouse_dragging = false;
+	mouse_is_dragging_item = false;
+	mouse_pressed_item_rotation = 0;
+	mouse_pressed_item_offset = [];
+
+	mouse_pressed_item = undefined;
+	surface_free(mouse_pressed_item_surf);
+
+	hovered_item_to_remove = undefined;
+}
