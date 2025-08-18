@@ -76,6 +76,8 @@
   "name":"inventory test",
   "resources":[
     {"id":{"name":"__InputUpdateController","path":"objects/__InputUpdateController/__InputUpdateController.yy",},},
+    {"id":{"name":"obj_INDROME_rebind_handler_test_v0","path":"objects/obj_INDROME_rebind_handler_test_v0/obj_INDROME_rebind_handler_test_v0.yy",},},
+    {"id":{"name":"obj_INDROME_rebind_handler_test_v1","path":"objects/obj_INDROME_rebind_handler_test_v1/obj_INDROME_rebind_handler_test_v1.yy",},},
     {"id":{"name":"obj_inventory","path":"objects/obj_inventory/obj_inventory.yy",},},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
     {"id":{"name":"__InputBindingIsThumbstick","path":"scripts/__InputBindingIsThumbstick/__InputBindingIsThumbstick.yy",},},
